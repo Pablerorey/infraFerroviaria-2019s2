@@ -1,0 +1,76 @@
+import vagones.*
+import formacion.*
+
+test "primera formacion" {
+
+	const vagon = new Pasajeros(largo = 10, ancho = 4, banios = true, ordenado = true)
+	const vagon1 = new Pasajeros(largo = 7, ancho = 2, banios = false, ordenado = false)
+	const vagon2 = new Carga(cargaMaximaIdeal = 6800,maderasSueltas = 5)
+	const vagon3 = new Dormitorio(compartimientos = 8, camas = 3)
+	const formacion = new Formacion()
+	
+	assert.equals(100, vagon.cantidadDePasajeros())
+	assert.equals(41, vagon1.cantidadDePasajeros())
+	assert.equals(0, vagon2.cantidadDePasajeros())
+	assert.equals(24, vagon3.cantidadDePasajeros())
+	
+	assert.equals(10300, vagon.pesoMaximo())
+	assert.equals(6080, vagon1.pesoMaximo())
+	assert.equals(6300, vagon2.pesoMaximo())
+	assert.equals(7120, vagon3.pesoMaximo())
+	
+	
+	formacion.acoplarVagones([vagon, vagon1, vagon2, vagon3])
+	assert.equals(300, vagon.cantidadMaximaDeCarga())
+	assert.equals(800, vagon1.cantidadMaximaDeCarga())
+	assert.equals(4800, vagon2.cantidadMaximaDeCarga())
+	assert.equals(1200, vagon3.cantidadMaximaDeCarga())
+	
+	
+	assert.that(vagon.banios())
+	assert.that(not vagon1.banios())
+	assert.that(not vagon2.banios())
+	assert.that(vagon3.banios())
+	
+	
+	
+	// antes del mantenimiento
+	assert.equals(165, formacion.cuantosPasajeros())
+	assert.equals(1, formacion.vagonesPopulares())
+	assert.that(not formacion.formacionCarguera())
+	assert.equals(4220, formacion.dispensionDePesos())
+	assert.equals(2, formacion.cantidadDeBanios())
+	
+	formacion.mantenimiento()
+	
+	// despues del mantenimiento
+	assert.equals(180, formacion.cuantosPasajeros())
+	assert.equals(2, formacion.vagonesPopulares())
+	assert.that(not formacion.formacionCarguera())
+	assert.equals(3200, formacion.dispensionDePesos())
+	assert.equals(2, formacion.cantidadDeBanios())		
+}
+
+test "segunda formacion" {
+	const vagon = new Carga(cargaMaximaIdeal = 8000,maderasSueltas = 1)
+	const vagon1 = new Dormitorio(compartimientos = 15, camas = 4)
+	const formacion = new Formacion()
+	
+	formacion.acoplarVagones([vagon, vagon1])
+	
+	// antes del mantenimiento
+	assert.equals(60, formacion.cuantosPasajeros())
+	assert.equals(1, formacion.vagonesPopulares())
+	assert.that(formacion.formacionCarguera())
+	assert.equals(900, formacion.dispensionDePesos())
+	assert.equals(1, formacion.cantidadDeBanios())
+	
+	formacion.mantenimiento()
+	
+	// despues del mantenimiento
+	assert.equals(60, formacion.cuantosPasajeros())
+	assert.equals(1, formacion.vagonesPopulares())
+	assert.that(formacion.formacionCarguera())
+	assert.equals(500, formacion.dispensionDePesos())
+	assert.equals(1, formacion.cantidadDeBanios())		
+}

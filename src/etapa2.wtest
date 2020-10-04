@@ -1,0 +1,38 @@
+import vagones.*
+import formacion.*
+import locomotoras.*
+
+test "locomotoras" {
+	// vagones
+	const vagon = new Pasajeros(largo = 10, ancho = 4, banios = true, ordenado = true)
+	const vagon1 = new Pasajeros(largo = 7, ancho = 2, banios = false, ordenado = false)
+	const vagon2 = new Carga(cargaMaximaIdeal = 6800,maderasSueltas = 5)
+	const vagon3 = new Dormitorio(compartimientos = 8, camas = 3)
+	//locomotoras
+	const loco = new Locomotora(peso = 3000, arrastre = 20000)
+	const loco1 = new Locomotora(peso = 5000, arrastre = 22000)
+	
+	const formacion = new Formacion()
+	
+	formacion.acoplarVagones([vagon, vagon1, vagon2, vagon3])
+	
+	assert.equals(29800, formacion.pesoMaximoVagones())
+	
+	formacion.acoplarLocomotora(loco)
+	
+	assert.that(formacion.esEficiente())
+	assert.that(not formacion.puedeMoverse())
+	assert.equals(12800, formacion.kilosDeEmpujeFaltantes())
+	
+	formacion.acoplarLocomotora(loco1)
+	
+	assert.that(not formacion.esEficiente())
+	assert.that(formacion.puedeMoverse())
+	assert.equals(0, formacion.kilosDeEmpujeFaltantes())
+	
+	
+	
+
+	
+
+}
